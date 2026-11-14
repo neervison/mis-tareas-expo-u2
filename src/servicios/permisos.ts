@@ -20,7 +20,7 @@
 //    teléfono).
 //
 // Este servicio NO dibuja nada: recibe la función que
-// muestra la explicación (un Alert de la pantalla) y
+// muestra la explicación (un diálogo de la pantalla) y
 // devuelve true/false. Así la regla se prueba sola, sin
 // pantalla, con un doble de la explicación.
 // ============================================================

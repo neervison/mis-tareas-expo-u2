@@ -28,7 +28,7 @@
 //   si cambian las tareas o los filtros). El estado vacío
 //   cambia según el filtro activo y la búsqueda.
 // - SINCRONIZACIÓN: botones para subir los cambios pendientes
-//   y para importar desde la API, con resumen en Alert. Al
+//   y para importar desde la API, con resumen en un diálogo. Al
 //   VOLVER la conexión, la cola se vacía sola (offline-first).
 // - ANIMACIONES con LayoutAnimation: al agregar, eliminar,
 //   completar o cambiar de filtro, la lista se reordena con
@@ -53,7 +53,6 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
   KeyboardAvoidingView,
   LayoutAnimation,
@@ -81,6 +80,7 @@ import { useEstadoRed } from '../hooks/useEstadoRed';
 import { useTareas } from '../hooks/useTareas';
 import { DatosTarea, FiltroPrioridad as TipoFiltroPrioridad, FiltroTareas, Tarea } from '../modelos/tarea';
 import { Sesion } from '../modelos/usuario';
+import { mostrarMensaje, pedirConfirmacion } from '../servicios/dialogos';
 import { vibrarAlConfirmar } from '../servicios/dispositivo';
 import {
   buscarTareas,
@@ -193,54 +193,57 @@ export default function PantallaTareas({ sesion, onSalir }: PropiedadesPantallaT
     void alternarCompletada(id);
   };
 
-  /** Eliminar pide confirmación simple con Alert (evita borrados por error). */
-  const manejarEliminar = (tarea: Tarea) => {
-    Alert.alert('Eliminar tarea', `¿Seguro que quieres eliminar "${tarea.titulo}"?`, [
-      { text: 'Cancelar', style: 'cancel' },
-      {
-        text: 'Eliminar',
-        style: 'destructive',
-        onPress: () => {
-          animarSiguienteCambio();
-          void eliminarTarea(tarea.id);
-          // Si se estaba editando esa misma tarea, se sale del modo edición.
-          if (tareaEnEdicion?.id === tarea.id) setTareaEnEdicion(null);
-        },
-      },
-    ]);
+  /** Eliminar pide confirmación simple con un diálogo (evita borrados por error). */
+  const manejarEliminar = async (tarea: Tarea) => {
+    const confirmado = await pedirConfirmacion(
+      'Eliminar tarea',
+      `¿Seguro que quieres eliminar "${tarea.titulo}"?`,
+      'Eliminar',
+      'Cancelar',
+      true,
+    );
+    if (!confirmado) return;
+    animarSiguienteCambio();
+    void eliminarTarea(tarea.id);
+    // Si se estaba editando esa misma tarea, se sale del modo edición.
+    if (tareaEnEdicion?.id === tarea.id) setTareaEnEdicion(null);
   };
 
   /** Cerrar sesión pide confirmación: la lista queda guardada en el teléfono. */
-  const manejarSalir = () => {
-    Alert.alert('Cerrar sesión', `¿Seguro que quieres salir, ${sesion.nombre}?`, [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Salir', style: 'destructive', onPress: onSalir },
-    ]);
+  const manejarSalir = async () => {
+    const confirmado = await pedirConfirmacion(
+      'Cerrar sesión',
+      `¿Seguro que quieres salir, ${sesion.nombre}?`,
+      'Salir',
+      'Cancelar',
+      true,
+    );
+    if (confirmado) onSalir();
   };
 
   /** Sube la cola y resume el resultado para el usuario. */
   const manejarSincronizar = async () => {
     const resumen = await sincronizar();
     if (resumen.sinConexion) {
-      Alert.alert(
+      mostrarMensaje(
         'Sin conexión',
         'Los cambios quedan guardados en la cola y se subirán cuando vuelva internet.',
       );
       return;
     }
     if (resumen.procesadas === 0 && resumen.fallidas === 0) {
-      Alert.alert('Al día', 'No había cambios pendientes de sincronizar.');
+      mostrarMensaje('Al día', 'No había cambios pendientes de sincronizar.');
       return;
     }
     if (resumen.fallidas > 0) {
-      Alert.alert(
+      mostrarMensaje(
         'Sincronización parcial',
         `Se subieron ${resumen.procesadas} cambios y ${resumen.fallidas} quedaron pendientes. Inténtalo de nuevo con mejor conexión.`,
       );
       return;
     }
     void vibrarAlConfirmar();
-    Alert.alert(
+    mostrarMensaje(
       'Sincronización completa',
       `Se subieron ${resumen.procesadas} cambios a la API.`,
     );
@@ -250,7 +253,7 @@ export default function PantallaTareas({ sesion, onSalir }: PropiedadesPantallaT
   const manejarImportar = async () => {
     const resumen = await importar();
     if (resumen.sinConexion) {
-      Alert.alert(
+      mostrarMensaje(
         'Sin conexión',
         'No se pudo importar: revisa tu conexión e inténtalo de nuevo.',
       );
@@ -269,7 +272,7 @@ export default function PantallaTareas({ sesion, onSalir }: PropiedadesPantallaT
     if (resumen.fallidas === 0) {
       void vibrarAlConfirmar();
     }
-    Alert.alert('Importación completa', mensaje);
+    mostrarMensaje('Importación completa', mensaje);
   };
 
   // Mientras se cargan las tareas guardadas, un indicador centrado.

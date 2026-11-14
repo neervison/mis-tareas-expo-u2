@@ -19,13 +19,13 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import React, { useRef, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Modal,
   Pressable,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import { mostrarMensaje } from '../servicios/dialogos';
 import { capturarFoto } from '../servicios/foto';
 import { colores, espaciados, radios, tipografia } from '../tema';
 
@@ -59,7 +59,7 @@ export default function PantallaCamara({
     if (resultado.ok) {
       onFotoTomada(resultado.fotoUri);
     } else {
-      Alert.alert('No se pudo tomar la foto', resultado.mensaje);
+      mostrarMensaje('No se pudo tomar la foto', resultado.mensaje);
     }
   };
 

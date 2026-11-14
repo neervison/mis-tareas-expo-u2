@@ -35,7 +35,6 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Image,
   Pressable,
   StyleSheet,
@@ -57,6 +56,7 @@ import {
   UbicacionTarea,
 } from '../modelos/tarea';
 import PantallaCamara from '../pantallas/PantallaCamara';
+import { mostrarMensaje, pedirConfirmacion } from '../servicios/dialogos';
 import { asegurarPermiso, verificarPermisoUbicacion } from '../servicios/permisos';
 import { obtenerUbicacionActual, textoUbicacion } from '../servicios/ubicacion';
 import { esTituloValido, validarTitulo } from '../servicios/validacionTarea';
@@ -79,12 +79,12 @@ const OPCIONES_PRIORIDAD: Prioridad[] = ['baja', 'media', 'alta'];
  * este paso, el sistema pediría el permiso de sorpresa.
  */
 function mostrarExplicacionPermiso(explicacion: ExplicacionPermiso): Promise<boolean> {
-  return new Promise((resolver) => {
-    Alert.alert(explicacion.titulo, explicacion.mensaje, [
-      { text: 'Ahora no', style: 'cancel', onPress: () => resolver(false) },
-      { text: explicacion.textoAceptar, onPress: () => resolver(true) },
-    ]);
-  });
+  return pedirConfirmacion(
+    explicacion.titulo,
+    explicacion.mensaje,
+    explicacion.textoAceptar,
+    'Ahora no',
+  );
 }
 
 interface PropiedadesFormulario {
@@ -147,7 +147,7 @@ export default function FormularioTarea({
       mostrarExplicacionPermiso(EXPLICACION_PERMISO_CAMARA),
     );
     if (!permitido) {
-      Alert.alert(
+      mostrarMensaje(
         'Sin permiso de cámara',
         'La tarea se guardará sin foto. Puedes otorgar el permiso desde los ajustes del teléfono.',
       );
@@ -162,7 +162,7 @@ export default function FormularioTarea({
       mostrarExplicacionPermiso(EXPLICACION_PERMISO_UBICACION),
     );
     if (!permitido) {
-      Alert.alert(
+      mostrarMensaje(
         'Sin permiso de ubicación',
         'La tarea se guardará sin ubicación. Puedes otorgar el permiso desde los ajustes del teléfono.',
       );
@@ -174,7 +174,7 @@ export default function FormularioTarea({
     if (resultado.ok) {
       setUbicacion(resultado.ubicacion);
     } else {
-      Alert.alert('Ubicación no disponible', resultado.mensaje);
+      mostrarMensaje('Ubicación no disponible', resultado.mensaje);
     }
   };
 
