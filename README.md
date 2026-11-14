@@ -137,6 +137,7 @@ mis-tareas-expo-u2/
     │   ├── almacenamiento.ts         ← AsyncStorage: guardar/leer/borrar JSON, claves por usuario
     │   ├── autenticacion.ts          ← Registro/inicio de sesión, hash SHA-256 con sal, sesión
     │   ├── permisos.ts               ← Permisos incrementales con explicación y respeto a denegación
+    │   ├── dialogos.ts               ← Mensajes y confirmaciones: Alert en nativo, diálogos del navegador en web
     │   ├── foto.ts                   ← Captura de foto (cámara inyectada) y formato data URI
     │   ├── ubicacion.ts              ← Lectura GPS con tiempo límite, enlace y texto de mapas
     │   ├── apiTareas.ts              ← Cliente REST (GET/POST/PUT/DELETE, timeout, validación)
@@ -200,6 +201,7 @@ Cada servicio tiene una sola responsabilidad y **no dibuja nada**: recibe datos,
 | `almacenamiento.ts` | Guarda/lee/borra JSON en AsyncStorage, con claves por usuario | Los datos sobreviven al cierre y funcionan sin conexión; un JSON dañado devuelve `null` en vez de romper la app |
 | `autenticacion.ts` | Registro, inicio de sesión, cierre y sesión guardada | La clave **nunca se guarda**: se guarda su hash SHA-256 con sal aleatoria; el mensaje de error es el mismo exista o no el usuario |
 | `permisos.ts` | Verifica y solicita cámara y ubicación | **Incremental** (solo al usar la función), **con explicación previa** y **respeto a la denegación**: si el usuario niega, no se insiste y la app sigue usable |
+| `dialogos.ts` | Muestra mensajes y pide confirmaciones | **Según la plataforma**: en el teléfono usa `Alert`, y en la web usa los diálogos del navegador (`window.alert` / `window.confirm`), porque `Alert` no hace nada en la web |
 | `foto.ts` | Toma la foto con la cámara recibida y la deja como data URI | La cámara llega como parámetro (inyección de dependencias): se prueba con una cámara falsa; los fallos se clasifican (denegada / cancelada / error) |
 | `ubicacion.ts` | Lee el GPS con la mayor precisión y tiempo límite de 10 s | Si el GPS no responde a tiempo, la tarea se guarda sin ubicación; valida que las coordenadas sean números finitos |
 | `apiTareas.ts` | Cliente REST contra JSONPlaceholder (`/todos`) | Timeout con `AbortController`, errores HTTP como `ErrorApi` con estado, importación con límite de 20 y validación elemento por elemento |
@@ -365,7 +367,7 @@ El proyecto está ordenado como se ordena un proyecto profesional de manufactura
 |---|---|---|
 | **Raíz de composición + puerta de sesión** | El punto de entrada solo arma la app y decide qué pantalla mostrar según la sesión; no contiene lógica de tareas. | `App.tsx` con `SafeAreaProvider` + `useSesion()`. |
 | **Pantallas en su carpeta** | Cada pantalla completa vive separada de los componentes reutilizables. | `src/pantallas/` (tareas, autenticación, cámara) vs `src/componentes/` (las piezas). |
-| **Capa de servicios** | Todo lo que habla con hardware, almacenamiento o red vive en servicios sin pantalla, probables solos. | `src/servicios/`: almacenamiento, autenticación, permisos, foto, ubicación, API, sincronización, dispositivo. |
+| **Capa de servicios** | Todo lo que habla con hardware, almacenamiento o red vive en servicios sin pantalla, probables solos. | `src/servicios/`: almacenamiento, autenticación, permisos, diálogos, foto, ubicación, API, sincronización, dispositivo. |
 | **Responsabilidad única por archivo** | Un archivo = una tarea. Si algo cambia, se sabe exactamente qué archivo tocar. | `foto.ts` (solo capturar), `ubicacion.ts` (solo GPS), `sincronizacion.ts` (solo cola y mezcla). |
 | **Presentación separada de la lógica** | Los componentes dibujan; las reglas y el estado viven fuera de ellos. | Componentes en `src/componentes/`; lógica en `src/hooks/`; reglas en `src/servicios/`. |
 | **Servicios con funciones puras** | Las reglas de negocio no dependen de la pantalla: se pueden probar solas y reutilizar. | `filtradoTareas.ts`, `validacionTarea.ts`, `mezclarImportadas` en `sincronizacion.ts`. |
@@ -446,7 +448,7 @@ La elección fue deliberada y se resume en cuatro razones, más una por cada fun
 | Enlace a mapas | `Pressable` + `Linking.openURL` con el enlace de Google Maps de las coordenadas |
 | Iconos | Set vectorial **Ionicons** de `@expo/vector-icons` (trazo profesional, sin archivos de imagen) |
 | Indicador de carga | `ActivityIndicator` mientras se cargan tareas, se obtiene el GPS o se sincroniza |
-| Avisos y confirmaciones | `Alert` (explicación de permisos, confirmación de eliminar/salir, resumen de sincronización) |
+| Avisos y confirmaciones | Servicio `dialogos.ts`: `Alert` en el teléfono y diálogos del navegador en la web (explicación de permisos, confirmación de eliminar/salir, resumen de sincronización) |
 | Organización de la pantalla | Pantallas en `src/pantallas/` + componentes en `src/componentes/`, cada uno con su `StyleSheet` |
 | Tema visual | Tokens en `src/tema/` (colores, espaciados, radios y tipografía centralizados) |
 
