@@ -12,7 +12,7 @@ Este README está ordenado **por pasos, desde cero**: si sigues los pasos 1 al 1
 
 ## Capturas de la aplicación
 
-Las cuatro capturas son **reales: tomadas de la app ejecutándose** (build web de Expo en el navegador, manejando la interfaz de verdad: registro de usuario, creación de una tarea, registro de ubicación y toma de foto). La cámara y la ubicación estaban **emuladas por el navegador**: la foto muestra el patrón de imagen de la cámara de prueba y las coordenadas son las de Santiago configuradas en la emulación. Ninguna captura usa emoticones: los iconos son **vectoriales profesionales (Ionicons)**.
+Las cuatro capturas son **reales: tomadas de la app ejecutándose en un teléfono físico con Expo Go** (registro de usuario, creación de una tarea, registro de ubicación y toma de foto). La cámara y la ubicación son **las reales del teléfono**: las fotos muestran objetos reales fotografiados con la cámara y las coordenadas son las del GPS en Santiago, con su precisión (±18 m y ±31 m). El recorrido completo quedó grabado en el **video de demostración** que acompaña la entrega. Ninguna captura usa emoticones: los iconos son **vectoriales profesionales (Ionicons)**.
 
 ### Captura 1 — Inicio de sesión
 
@@ -24,19 +24,19 @@ Las cuatro capturas son **reales: tomadas de la app ejecutándose** (build web d
 
 ![Lista de Mis Tareas: formulario con prioridad, foto y ubicación, búsqueda, filtros y tarjetas con insignias](capturas/2-lista-tareas.png)
 
-**Qué se ve y qué demuestra:** la pantalla principal ampliada. El formulario «Nueva tarea» ahora incluye **chips de prioridad** (Baja/Media/Alta) y las secciones **Foto (opcional)** y **Ubicación (opcional)** con sus botones. Debajo van la **barra de búsqueda**, los **chips de filtro por estado** con conteos (Todas (3), Pendientes (2), Completadas (1)), los **chips de filtro por prioridad** con conteos, y los botones **«Sincronizar»** e **«Importar de la API»**. Las tarjetas llevan la **insignia de prioridad** con su color y la etiqueta ámbar **«Pendiente de sincronizar»**: la app muestra siempre qué falta por subir. En conjunto, la captura evidencia la lista ampliada completa: prioridad, búsqueda, filtros y estado de sincronización visibles de un vistazo.
+**Qué se ve y qué demuestra:** la pantalla principal ampliada, en el teléfono real. El formulario «Nueva tarea» incluye **chips de prioridad** (Baja/Media/Alta) y las secciones **Foto (opcional)** y **Ubicación (opcional)** con sus botones. Debajo van la **barra de búsqueda**, los **chips de filtro por estado** con conteos (Todas (4), Pendientes (3), Completadas (1)), los **chips de filtro por prioridad** con conteos (Baja (1), Media (2), Alta (1)), y los botones **«Sincronizar»** e **«Importar de la API»**. Las tarjetas llevan la **insignia de prioridad** con su color y la etiqueta ámbar **«Pendiente de sincronizar»**: la app muestra siempre qué falta por subir. En conjunto, la captura evidencia la lista ampliada completa: prioridad, búsqueda, filtros y estado de sincronización visibles de un vistazo.
 
 ### Captura 3 — Formulario con foto y GPS registrados
 
 ![Formulario con foto capturada y ubicación GPS registrada](capturas/3-formulario-foto-gps.png)
 
-**Qué se ve y qué demuestra:** el formulario llenándose con una tarea real. El título «Retirar el pedido en el centro», la descripción, la prioridad **Alta** seleccionada en rojo, la **vista previa de la foto** recién capturada con la cámara (patrón de la cámara de prueba del navegador) con su botón «Quitar foto», y la fila de ubicación con las **coordenadas registradas por el GPS** («-33.4489, -70.6693 · ±0 m») y su opción «Quitar». Demuestra las dos funciones de periféricos juntas en el mismo flujo: **cámara + GPS**, ambas opcionales y quitables antes de guardar.
+**Qué se ve y qué demuestra:** el formulario de edición con una tarea real. El título «Estudiar para la evaluación», la descripción, la prioridad **Alta** seleccionada en rojo, la **vista previa de la foto** capturada con la cámara real del teléfono (la pantalla del PC, con su código QR) con su botón «Quitar foto», y la fila de ubicación con las **coordenadas registradas por el GPS real** («-33.4492, -70.6356 · ±31 m») y su opción «Quitar». Demuestra las dos funciones de periféricos juntas en el mismo flujo: **cámara + GPS**, ambas opcionales y quitables antes de guardar.
 
 ### Captura 4 — Tarea guardada con foto, coordenadas y marca de pendiente
 
 ![Tarea guardada con miniatura de foto, enlace de coordenadas y marca pendiente de sincronizar](capturas/4-sincronizacion.png)
 
-**Qué se ve y qué demuestra:** la lista después de guardar. La tarea nueva («Retirar el pedido en el centro», prioridad Alta) muestra su **miniatura de foto**, el **enlace de coordenadas** que abre el lugar en mapas al tocarlo, y la etiqueta **«Pendiente de sincronizar»**: el cambio está guardado en el teléfono y en la cola para subir a la API. Las tres tareas de ejemplo también muestran su prioridad y su marca de pendiente, y arriba quedan los botones de sincronización. Demuestra el ciclo completo: **capturar → guardar local → ver el estado de sincronización** en la propia tarjeta.
+**Qué se ve y qué demuestra:** la lista después de guardar, en el teléfono real. Arriba quedan los botones **«Sincronizar»** e **«Importar de la API»**. Las tareas con foto («Estudiar para la evaluación», prioridad Alta, y «Cosas pendiente por hacer», prioridad Media) muestran su **miniatura de foto real**, el **enlace de coordenadas del GPS** («-33.4492, -70.6356», con ±31 m y ±18 m) que abre el lugar en mapas al tocarlo, y la etiqueta **«Pendiente de sincronizar»**: el cambio está guardado en el teléfono y en la cola para subir a la API. Demuestra el ciclo completo: **capturar → guardar local → ver el estado de sincronización** en la propia tarjeta.
 
 ---
 
