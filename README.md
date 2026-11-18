@@ -274,10 +274,11 @@ Para detener el servidor: `Ctrl + C` en la terminal.
 | Calidad de código (ESLint) | `npm run lint` (`expo lint`) | Sin problemas ✅ |
 | Empaquetado web (Metro) | `npm run export:web` (`expo export --platform web`) | 464 módulos, sin errores ✅ |
 | Pruebas automatizadas (Jest) | `npm test` | **42/42 OK** (10 suites) ✅ |
+| Prueba en teléfono físico (Expo Go) | Recorrido manual en un teléfono real | Cámara y GPS reales funcionando ✅ (video de demostración) |
 
 Las 42 pruebas cubren, con dobles y sin teléfono ni red real: almacenamiento (guardar/leer/borrar/dañado), foto (éxito, data URI web, sin base64, denegada, cancelada, error), ubicación (éxito, tiempo agotado, denegada, datos inválidos, enlace y texto), permisos (otorgado, denegado, flujo con explicación), autenticación (registro, duplicado, validación, inicio correcto e incorrecto, cierre), tareas (siembra, separación por usuario, construcción inmutable), filtrado y búsqueda, API (mapeo, inválidos, POST/PUT/DELETE, error HTTP, timeout, sin conexión), sincronización (combinación al encolar, vaciado, sin conexión, fallo parcial, mezcla) y dispositivo (estado de red, suscripción, vibración). El detalle por archivo está en `tests/` (cada archivo explica qué cubre) y en el informe.
 
-En resumen: el proyecto compila sin errores de tipos, pasa el análisis de código de ESLint, se empaqueta completo con Metro (464 módulos) y sus 42 pruebas automatizadas pasan.
+En resumen: el proyecto compila sin errores de tipos, pasa el análisis de código de ESLint, se empaqueta completo con Metro (464 módulos), sus 42 pruebas automatizadas pasan y se verificó en un teléfono físico con Expo Go, con la cámara y el GPS reales funcionando (recorrido grabado en el video de demostración que acompaña la entrega).
 
 ---
 
